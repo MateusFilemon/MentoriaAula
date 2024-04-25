@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public float moveSpeed;
     public float jumpForce;
+    public Transform foot;
+    public LayerMask ground;
+    public bool onGround;
+
+    public Animator anim;
 
     //bool binario = Dois tipos de info, Verdadeiro ou Falso;
     //int numeroInteiro;
@@ -36,7 +41,23 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
         //rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
+        anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x)) ;
 
+        if ((rb.velocity.x > 0 && transform.localScale.x <0) || (rb.velocity.x < 0 && transform.localScale.x > 0))
+        {
+            Vector2 _localScale = transform.localScale;
+            _localScale.x *= -1f; 
+            transform.localScale = _localScale;
+        }
+
+        onGround = Physics2D.OverlapCircle(foot.position, .2f, ground);
+        anim.SetBool("OnGround", onGround);
+
+
+        if(Input.GetButtonDown("Jump") && onGround)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
 
     }
 
