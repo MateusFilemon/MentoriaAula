@@ -516,6 +516,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   onGround: 0
+  canAttack: 1
+  isAttacking: 0
+  isHeavyAttack: 0
   anim: {fileID: 763680699}
 --- !u!95 &763680699
 Animator:

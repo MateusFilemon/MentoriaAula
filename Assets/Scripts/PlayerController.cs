@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
+
     public Rigidbody2D rb;
     public float moveSpeed;
     public float jumpForce;
     public Transform foot;
     public LayerMask ground;
     public bool onGround;
+
+    public bool canAttack;
+    public bool isAttacking;
+    public bool isHeavyAttack;
 
     public Animator anim;
 
@@ -24,19 +32,13 @@ public class PlayerController : MonoBehaviour
     //metodos são funçoes dentro do script;
     //Start(quando o jogo começa) e Update(uma atualização a cada frame, sempre chamando);
     //Awake = tela de carregamento, bem no começo. Antes do jogo começar;
-    
-    private void Awake()
-    {
-        
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
+    private void Awake()
+    {
+        instance = this;
+    }
+
     void Update()
     {
         rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
@@ -59,6 +61,20 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
+        if (Input.GetButtonDown("Fire1"))
+        {
+            isHeavyAttack = false;
+
+            Attack();
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            isHeavyAttack = true;
+
+            Attack();
+        }
+
     }
 
     //public void SetSpeed()
@@ -66,4 +82,29 @@ public class PlayerController : MonoBehaviour
         //moveSpeed = Time.deltaTime;
         //Time.deltaTime = tempo em jogo, segundos em que o jogo ta rodando
     //}
+
+    public void Attack()
+    {
+        if (canAttack)
+        {
+           isAttacking = true;
+           canAttack = false;
+        }
+        else
+        {
+            return;
+        }
+    }
+    public void AttackManager()
+    {
+        if (!canAttack)
+        {
+            canAttack = true;
+        }
+        else
+        {
+            canAttack = false;
+        }
+    }
+ 
 }
