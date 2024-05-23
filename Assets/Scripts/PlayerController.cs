@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : HealthController
 {
     public static PlayerController instance;
 
     public Rigidbody2D rb;
     public float moveSpeed;
     public float jumpForce;
+    private Vector2 direction;
+
     public Transform foot;
     public LayerMask ground;
     public bool onGround;
@@ -37,11 +40,13 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        currentHealth = maxHealth;
     }
 
     void Update()
     {
-        rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
+        // TOPDOWN: rb.velocity = new Vector2(direction.x * moveSpeed, direction.x * moveSpeed rb.velocity.y);
         //rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
         anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x)) ;
 
@@ -55,18 +60,7 @@ public class PlayerController : MonoBehaviour
         onGround = Physics2D.OverlapCircle(foot.position, .2f, ground);
         anim.SetBool("OnGround", onGround);
 
-
-        if(Input.GetButtonDown("Jump") && onGround)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            isHeavyAttack = false;
-
-            Attack();
-        }
+      
 
         if (Input.GetButtonDown("Fire2"))
         {
@@ -75,6 +69,47 @@ public class PlayerController : MonoBehaviour
             Attack();
         }
 
+    }
+
+    public void MovementAction(InputAction.CallbackContext value) 
+    {
+        //o valor do vetor x de direction é igual ao vetor x do input
+        direction.x = value.ReadValue<Vector2>().x;
+        //TOPDOWN: direction = value.ReadValue<Vector2>();
+        //direction serve para subir escadas também!
+    }
+
+    public void JumpAction(InputAction.CallbackContext value) 
+    {
+        if(value.performed) 
+        {
+            if (onGround)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            }
+
+        }
+
+    }
+
+    public void QuickAttack(InputAction.CallbackContext value) 
+    { 
+        if (value.performed) 
+        {
+            isHeavyAttack = false;
+
+            Attack();
+        }
+    }
+
+    public void HeavyAttack(InputAction.CallbackContext value) 
+    { 
+        if (value.performed)
+        {
+            isHeavyAttack = true;
+
+            Attack();
+        }
     }
 
     //public void SetSpeed()
@@ -105,6 +140,7 @@ public class PlayerController : MonoBehaviour
         {
             canAttack = false;
         }
+
     }
- 
+
 }
