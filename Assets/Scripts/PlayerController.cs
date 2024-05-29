@@ -18,6 +18,10 @@ public class PlayerController : HealthController
     public LayerMask ground;
     public bool onGround;
 
+    public float attackDamage;
+    public float attackRange;
+    public Transform attackPoint;
+    public LayerMask enemyLayers;
     public bool canAttack;
     public bool isAttacking;
     public bool isHeavyAttack;
@@ -69,6 +73,11 @@ public class PlayerController : HealthController
             Attack();
         }
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     public void MovementAction(InputAction.CallbackContext value) 
@@ -142,5 +151,23 @@ public class PlayerController : HealthController
         }
 
     }
+
+    public void DealDamage()
+    {
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (isHeavyAttack)
+            {
+                enemy.GetComponent<HealthController>().TakeDamage(attackDamage * 2);
+            }
+            else
+            {
+                enemy.GetComponent<HealthController>().TakeDamage(attackDamage);
+            }
+        }
+    }
+
 
 }
