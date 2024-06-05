@@ -52,8 +52,9 @@ public class PlayerController : HealthController
         rb.velocity = new Vector2(direction.x * moveSpeed, rb.velocity.y);
         // TOPDOWN: rb.velocity = new Vector2(direction.x * moveSpeed, direction.x * moveSpeed rb.velocity.y);
         //rb.velocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, Input.GetAxis("Vertical") * moveSpeed);
-        anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x)) ;
+        anim.SetFloat("Speed", Mathf.Abs(rb.velocity.x));
 
+        //fazer o sprite mudar de direção
         if ((rb.velocity.x > 0 && transform.localScale.x <0) || (rb.velocity.x < 0 && transform.localScale.x > 0))
         {
             Vector2 _localScale = transform.localScale;

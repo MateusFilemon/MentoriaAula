@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class HealthController : MonoBehaviour
 {
+    public bool isInvencible;
+    //para não tomar dano infinitamente
     public float maxHealth;
     public float currentHealth;
 
     public void TakeDamage(float damage) 
     { 
-        if(currentHealth > 0) 
+        if(currentHealth > 0 && !isInvencible)
         {
             currentHealth -= damage;
+            DamageEffect();
             Debug.Log(currentHealth);
             if(currentHealth <= 0 ) 
             { 
@@ -19,6 +22,11 @@ public class HealthController : MonoBehaviour
             }
 
         }
+
+    }
+
+    protected virtual void DamageEffect()
+    {
 
     }
 
