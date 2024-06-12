@@ -17,6 +17,7 @@ public class PlayerController : HealthController
     public Transform foot;
     public LayerMask ground;
     public bool onGround;
+    
 
     public float attackDamage;
     public float attackRange;
@@ -45,6 +46,11 @@ public class PlayerController : HealthController
     {
         instance = this;
         currentHealth = maxHealth;
+    }
+
+    private void Start()
+    {
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     void Update()

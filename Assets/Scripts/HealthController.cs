@@ -8,6 +8,7 @@ public class HealthController : MonoBehaviour
     //para não tomar dano infinitamente
     public float maxHealth;
     public float currentHealth;
+    public HealthBarController healthBar;
 
     public void TakeDamage(float damage) 
     { 
@@ -27,7 +28,10 @@ public class HealthController : MonoBehaviour
 
     protected virtual void DamageEffect()
     {
-
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(currentHealth);
+        }
     }
 
     //vamos fazer o playercontroller vai ser filho do health controller. Protected serve para variaveis e metodos de sua classe especifica, os filhos tem acesso a esses.
@@ -38,6 +42,11 @@ public class HealthController : MonoBehaviour
         if (currentHealth < maxHealth)
         {
             currentHealth = Mathf.Clamp(currentHealth + heal, 0, maxHealth);
+
+            if (healthBar != null)
+            {
+                healthBar.SetHealth(currentHealth);
+            }
         }
         Debug.Log(currentHealth);
 
