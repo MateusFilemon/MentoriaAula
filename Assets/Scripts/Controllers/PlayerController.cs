@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -176,5 +177,11 @@ public class PlayerController : HealthController
         }
     }
 
+
+    protected override void Death()
+    {
+        GameController.instance.GameOver();
+        Destroy(gameObject);
+    }
 
 }

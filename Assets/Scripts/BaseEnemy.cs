@@ -96,6 +96,9 @@ public class BaseEnemy : HealthController
         }
     }
 
-
+    protected override void Death()
+    {
+        Destroy(gameObject);
+    }
 
 }
